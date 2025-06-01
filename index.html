@@ -148,6 +148,8 @@ margin-right: 8px;
 margin-top: 2px;
 flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
 .container {
 padding: 20px;
 }
@@ -229,15 +231,24 @@ e.preventDefault();
 const checkboxes = document.querySelectorAll('input[name="affected_areas"]:checked');
 const selectedAreas = Array.from(checkboxes).map(cb => cb.value);
 
+// Get all form data
 const question2 = document.getElementById('question2').value.trim();
 const question3 = document.getElementById('question3').value.trim();
+const question5 = document.getElementById('question5').value.trim();
 
-if (selectedAreas.length > 0 && question2 && question3) {
+// Get radio button selection
+const personalityRadio = document.querySelector('input[name="personality"]:checked');
+const personality = personalityRadio ? personalityRadio.value : '';
+
+// Validate all required fields
+if (selectedAreas.length > 0 && question2 && question3 && personality && question5) {
 // Create FormData for Formspree
 const formData = new FormData();
 formData.append('affected_areas', selectedAreas.join(', '));
 formData.append('question2', question2);
 formData.append('question3', question3);
+formData.append('personality', personality);
+formData.append('question5', question5);
 formData.append('_subject', 'New Initial Assessment Submission');
 
 // Submit to Formspree
@@ -264,8 +275,10 @@ const response = {
 timestamp: new Date().toISOString(),
 responses: {
 "Areas affected": selectedAreas.join(', '),
-"How long struggling": question2,
-"Life hoping to build": question3
+"Current situation": question2,
+"How long struggling": question3,
+"Personality type": personality,
+"What you wish to gain": question5
 }
 };
 assessmentResponses.push(response);
